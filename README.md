@@ -26,4 +26,8 @@
 ![image](https://github.com/axiong8080/json2html/assets/21275254/8c5c7da3-274f-460a-9075-3a8f6f2e52a2)
 ![image](https://github.com/axiong8080/json2html/assets/21275254/a1ac18a8-f78c-4de2-84e3-400989ceaa8f)
 
+## GitHub账户信息统计
+
+![GitHub账户信息统计](https://github-stats.ubrong.com/api?username=axiong8080&show_icons=true&theme=tokyonight)
+
 
