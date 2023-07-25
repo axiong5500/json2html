@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>解析json</title>
+    <link rel="stylesheet" href="./css/parseJson.css">
+    <script src="./js/vue3.js"></script>
+    <link rel="stylesheet" href="./css/elementPlus.css"/>
+    <script src="./js/elementPlus.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-table-v2
+        border
+        :columns="columns"
+        :data="data"
+        :width="screenWidth"
+        :height="screenHeight"
+        fixed
+        scrollbar-always-on
+    >
+        <template #overlay v-if="loading">
+            <div class="el-loading-mask">数据解析中...</div>
+        </template>
+    </el-table-v2>
+</div>
+<script>
+
+    const {createApp, ref, reactive, toRefs, watch, onMounted, computed} = Vue
+    let { Loading }=ElementPlus
+
+    createApp({
+        setup() {
+            // 变量部分
+            const data = reactive({
+                data: [],
+                columns: [],
+                loading: true
+            });
+
+            // toRef: 复制 reactive 里的单个属性并转成 ref
+            // toRefs: 复制 reactive 里的所有属性并转成 ref
+            const dataRef = toRefs(data)
+            // 监听
+            // watch(dataRef.screenWidth, (newName, oldName) => {
+            //     console.log("新数据", newName);
+            //     console.log("老数据", oldName);
+            // })
+            // 计算属性
+            dataRef.screenWidth = computed(() => {
+                return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
+            });
+            dataRef.screenHeight = computed(() => {
+                return (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight)
+            });
+
+            // 生命周期 mounted
+            onMounted(() => {
+                methods.getJson()
+            })
+            // 函数部分
+            const methods = reactive({
+                getJson() {
+                    axios.get('/json/json.json')
+                        .then((res) => {
+                            let {status, data} = res;
+                            if (status === 200) {
+                                dataRef.data.value = data.RECORDS || []
+                                let keys = Object.keys(data.RECORDS[0])
+                                let columns = [{
+                                    key: 'column-n-1',
+                                    width: 70,
+                                    title: '序号',
+                                    cellRenderer: ({ rowIndex }) => `${rowIndex + 1}`,
+                                    align: 'center',
+                                }]
+                                keys.forEach(k => {
+                                    let obj = {
+                                        key: k,
+                                        dataKey: k,
+                                        title: k,
+                                        width: 140
+                                    }
+                                    columns.push(obj)
+                                })
+                                dataRef.columns.value = columns
+
+                                dataRef.loading.value = false
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+            })
+            return {
+                ...dataRef,
+                ...methods,
+            }
+        }
+
+    }).use(ElementPlus).mount('#app')
+</script>
+</body>
+</html>
