@@ -15,10 +15,15 @@
 
 ## 操作步骤
 1.环境准备下载node：https://nodejs.org/en/download
+
 2.cmd窗口输入：npm install http-server -g
+
 3.将需要转换的JSON文件放入项目工程的json文件夹中
+
 4.进入项目工程内，cmd窗口，输入：http-server，启动
+
 5.浏览器打开：http://localhost:8080/parseJson.html
+
 
 ## 软件截图
 
